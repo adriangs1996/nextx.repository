@@ -41,7 +41,7 @@ class Server:
         _config_logger()
         inject.configure_once(self.inject_configurator, False)
 
-    def get_api(self, server_prefix: str, title: str) -> FastAPI:
+    def build_api(self, server_prefix: str, title: str, version="0.1.0") -> FastAPI:
         self._setup()
 
         api = FastAPI(
@@ -49,7 +49,7 @@ class Server:
             redoc_url=f"{server_prefix}/docs",
             openapi_url=f"{server_prefix}/openapi.json",
             title=title,
-            version="0.1.0",
+            version=version,
             contact={"name": "NextX Team"},
         )
 
