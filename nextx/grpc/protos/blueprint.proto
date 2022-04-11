@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package blueprints;
+
+message ItemMetadata {
+  string name = 1;
+  string type = 2;
+  optional string description = 3;
+  optional string pattern = 4;
+}
+
+message ItemNomenclature {
+  string type = 1;
+  string name = 2;
+  optional string description = 3;
+}
+
+message CheckItem {
+  string name = 1;
+  optional float order = 2;
+  optional float min = 3;
+  optional float max = 4;
+  optional int64 date = 5;
+  optional string alias = 6;
+  optional bool active = 7;
+  repeated ItemMetadata metadata = 8;
+  repeated ItemNomenclature items = 9;
+}
+
+message DayPart {
+  string name = 1;
+  int64 start = 2;
+  int64 end = 3;
+}
+
+message State {
+  string name = 1;
+  optional string description = 2;
+}
+
+message Blueprint {
+  string version = 1;
+  string name = 2;
+  optional string owner = 3;
+  optional string description = 4;
+  optional string output = 5;
+  optional int64 published_at = 6;
+  optional int64 published_pilot_at = 7;
+  optional bool active = 8;
+  optional string temperature_unit = 9;
+  optional State state = 10;
+  repeated DayPart day_part_info = 11;
+  repeated CheckItem check_items = 12;
+}
+
+message BusinessUnitActiveBlueprintRequest { string id = 1; }
+
+message BusinessUnitActiveBlueprintResponse {
+  optional Blueprint active_project = 1;
+}
+
+message BusinessUnitBlueprintsRequest { string id = 1; }
+
+message BusinessUnitBlueprintsResponse { repeated Blueprint projects = 1; }
+
+service BlueprintService {
+  rpc GetActiveProjectForBU(BusinessUnitActiveBlueprintRequest)
+      returns (BusinessUnitActiveBlueprintResponse);
+
+  rpc GetBusinessUnitActiveProjects(BusinessUnitBlueprintsRequest)
+      returns (BusinessUnitBlueprintsResponse);
+}

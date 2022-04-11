@@ -17,9 +17,12 @@ aioredis = "^2.0.1"
 python-decouple = "^3.6"
 Inject = "^4.3.1"
 uvicorn = "^0.17.6"
+grpclib = "^0.4.2"
+protobuf = "^3.20.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.3.0"
+grpcio-tools = "^1.45.0"
 
 
 [build-system]
