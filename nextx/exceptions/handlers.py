@@ -7,6 +7,7 @@ from nextx.exceptions.definitions import (
     NotFoundError,
     ForbiddenError,
     InternalServerError,
+    InvalidRequestError,
 )
 
 
@@ -37,3 +38,11 @@ async def internal_server_exception_handler(request: Request, exc: InternalServe
     )
 
     return JSONResponse(status_code=status.HTTP_200_OK, content=data.dict())
+
+
+async def invalid_request_exception_handler(request: Request, exc: InvalidRequestError):
+    data = DataResponse(
+        message=f"Bad Request",
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        data=exc.details,
+    )
