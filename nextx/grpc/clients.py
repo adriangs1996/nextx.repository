@@ -1,10 +1,9 @@
-import abc
 from typing import List, Optional, Type, TypeVar
 from nextx.domain.models import Entity
 from nextx.interfaces.iremotes import IPublicationProjectRemoteClient
 from grpclib.client import Channel
-from .protos.blueprint_grpc import BlueprintServiceStub
-from .protos.blueprint_pb2 import (
+from nextx.grpc.protos.blueprint_grpc import BlueprintServiceStub
+from nextx.grpc.protos.blueprint_pb2 import (
     BusinessUnitActiveBlueprintRequest,
     BusinessUnitBlueprintsRequest,
 )

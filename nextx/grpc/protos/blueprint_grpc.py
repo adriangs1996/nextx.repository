@@ -9,7 +9,7 @@ import grpclib.client
 if typing.TYPE_CHECKING:
     import grpclib.server
 
-import blueprint_pb2
+import nextx.grpc.protos.blueprint_pb2 as blueprint_pb2
 
 
 class BlueprintServiceBase(abc.ABC):
