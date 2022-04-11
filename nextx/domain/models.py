@@ -1,3 +1,4 @@
+from typing import List
 from pydantic import BaseModel
 from beanie import PydanticObjectId
 
@@ -19,3 +20,9 @@ class PagingModel:
     def __init__(self, limit: int = 1000, skip: int = 0) -> None:
         self.limit = limit
         self.skip = skip
+
+
+class LoggedInUser(BaseModel):
+    token: str
+    scopes: List[str]
+    roles: List[str]
