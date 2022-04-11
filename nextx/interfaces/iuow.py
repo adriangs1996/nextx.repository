@@ -1,12 +1,8 @@
 from abc import abstractmethod
 from typing import Any, Iterable, List, Protocol, Type
 
-from nextx.interfaces.irepository import IRepository
-
 
 class IUnitOfWork(Protocol):
-    repositories: List[IRepository]
-
     @abstractmethod
     async def __aenter__(self) -> "IUnitOfWork":
         raise NotImplementedError
