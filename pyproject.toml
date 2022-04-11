@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nextx"
-version = "0.2.0"
+version = "0.3.0"
 description = "A repository interface and a companion stub implementation of NoSQL MongoDb"
 authors = ["adriangs1996 <adriangonzalezsanchez1996@gmail.com>"]
 license = "MIT"
