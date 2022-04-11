@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from nextx.pubsub.isusbscriber import ISubscriber
 import aioredis as redis
 from decouple import config
@@ -20,7 +20,7 @@ class RedisSubscriber(ISubscriber, abc.ABC):
     async def init_subscriber(self, events: List[str]):
         await self._subscribe_to_event(events)
 
-    async def _subscribe_to_event(self, event: str | List[str]):
+    async def _subscribe_to_event(self, event: Union[str, List[str]]):
         if isinstance(event, list):
             await self.pub_sub.subscribe(*event)
         else:
