@@ -14,7 +14,7 @@ BlueprintModel = TypeVar("BlueprintModel", bound=Entity)
 
 
 class PublicationProjectGrpcAsyncClient(
-    IPublicationProjectRemoteClient[BusinessUnitModel, BlueprintModel], abc.ABC
+    IPublicationProjectRemoteClient[BusinessUnitModel, BlueprintModel]
 ):
     def __init__(self, url: str, blueprint_model: Type[BlueprintModel]) -> None:
         self.blueprint_model = blueprint_model
