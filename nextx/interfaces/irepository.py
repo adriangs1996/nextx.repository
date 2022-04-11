@@ -7,6 +7,7 @@ TId = TypeVar("TId", contravariant=True)
 
 class IRepository(Protocol[TEntity, TId]):
     seen: List[TEntity]
+    session: Any
 
     @abstractmethod
     async def add(self, entity: TEntity) -> Optional[TEntity]:
