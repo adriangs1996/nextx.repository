@@ -22,7 +22,7 @@ class IRepository(Protocol[TEntity, TId]):
         raise NotImplementedError
 
     @abstractmethod
-    async def list(self, **kwargs: Mapping[str, Any]) -> List[TEntity]:
+    async def list(self, **kwargs: Any) -> List[TEntity]:
         raise NotImplementedError
 
     @abstractmethod
@@ -38,5 +38,5 @@ class IRepository(Protocol[TEntity, TId]):
         raise NotImplementedError
 
     @abstractmethod
-    async def delete_many(self, filters: Optional[Mapping[str, Any]] = None) -> int:
+    async def delete_many(self, **kwargs: Any) -> int:
         raise NotImplementedError
