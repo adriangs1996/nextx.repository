@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "nextx"
-version = "0.8.0"
-description = "A repository interface and a companion stub implementation of NoSQL MongoDb"
+version = "0.9.0"
+description = "Basic structure for fastapi microservices with specific support for blueprint project solution."
 authors = ["adriangs1996 <adriangonzalezsanchez1996@gmail.com>"]
 license = "MIT"
 include = [
