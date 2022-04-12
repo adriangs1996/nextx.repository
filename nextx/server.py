@@ -23,6 +23,7 @@ from asyncio import Task
 import grpclib.server
 from grpclib.utils import graceful_exit
 from nextx.pubsub.isusbscriber import ISubscriber
+from nextx.controllers import __controllers__
 
 
 def _config_logger():
@@ -48,12 +49,12 @@ def _config_logger():
 class Server:
     def __init__(
         self,
-        controllers: List[ApiController],
-        inject_configurator: Optional[Callable[[inject.Binder], None]],
+        controllers: List[ApiController] = [],
+        inject_configurator: Optional[Callable[[inject.Binder], None]] = None,
         events: Callable[[], List[str]] = lambda: [],
     ) -> None:
         self.inject_configurator = inject_configurator
-        self.controllers = controllers
+        self.controllers = __controllers__ + controllers
         self.grpc_server: Optional[Task] = None
         self.subscriber: Optional[Task] = None
         self.events = events()
@@ -67,12 +68,12 @@ class Server:
                 if isinstance(factory, Factory):
                     binder.bind_to_provider(dependency, factory)
                 else:
-                    binder.bind(dependency, factory)
+                    binder.bind(dependency, factory())
 
             if self.inject_configurator is not None:
                 self.inject_configurator(binder)
 
-        inject.configure_once(config, False)
+        inject.configure_once(config)
 
     async def _setup_grpc_server(self, grpc_service):
         server = grpclib.server.Server([grpc_service])  # type: ignore
@@ -85,6 +86,8 @@ class Server:
 
     async def _setup_subscriber(self, subscriber: ISubscriber):
         await subscriber.init_subscriber(self.events)
+        logger = logging.getLogger("logger")
+        logger.info("Event Subscriber ready!")
         await subscriber.loop()
 
     def shutdown(self):
@@ -140,7 +143,7 @@ class Server:
 
         try:
             subscriber = inject.instance(ISubscriber)
-        except inject.InjectorException:
+        except (inject.InjectorException, inject.ConstructorTypeError):
             subscriber = None
 
         if subscriber is not None:
