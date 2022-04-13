@@ -259,7 +259,10 @@ def _fix_endpoint_signature(cls: Type[Any], endpoint: Callable[..., Any]):
     # For this to work, `cls` must effectively be wrapped on inject.autoparams(),
     # so it tries to inject all the constructor arguments at runtime
     new_self_parameter = old_first_parameter.replace(default=Depends(Factory(cls)))
-    new_parameters = [new_self_parameter] + old_parameters[1:]
+    new_parameters = [new_self_parameter] + [
+        parameter.replace(kind=inspect.Parameter.KEYWORD_ONLY)
+        for parameter in old_parameters[1:]
+    ]
 
     new_signature = old_signature.replace(parameters=new_parameters)
     setattr(endpoint, "__signature__", new_signature)

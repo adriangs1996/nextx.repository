@@ -1,4 +1,14 @@
-from typing import Any, Callable, Dict, Generic, Hashable, Type, TypeVar, Union
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Generic,
+    Hashable,
+    Optional,
+    Type,
+    TypeVar,
+    Union,
+)
 from inject import autoparams
 
 T = TypeVar("T")
@@ -22,14 +32,19 @@ def service(fn: Union[Type[T], Callable[..., Any]]) -> Union[Type[T], Callable]:
 
 
 def provider(
-    interface: Union[Type[Any], Hashable],
+    interface: Optional[Union[Type[Any], Hashable]] = None,
     as_provider: bool = True,
-) -> Callable[[Union[Type[T], Callable]], Union[Type[T], Any, Callable]]:
+) -> Callable[[Union[Type[T], Callable]], Type[T]]:
     def decorator(cls: Union[Type[T], Callable[..., Any]]) -> Union[Type[T], Callable]:
-        if as_provider:
-            __mappings__[interface] = Factory(cls)
+        if interface is None:
+            key = cls
         else:
-            __mappings__[interface] = cls
+            key = interface
+
+        if as_provider:
+            __mappings__[key] = Factory(cls)
+        else:
+            __mappings__[key] = cls
 
         return cls
 
