@@ -88,8 +88,6 @@ class IService:
 class Service:
     def __init__(self) -> None:
         self.message = "WTF IT WORKS"
-        global service_count
-        service_count += 1
 
     def get_message(self):
         return self.message
@@ -99,8 +97,6 @@ class Service:
 class TestController:
     def __init__(self, service: IService) -> None:
         self.service = service
-        global controller_count
-        controller_count += 1
 
     @get("/{item_id}")
     async def get_message(self, item_id: str):
