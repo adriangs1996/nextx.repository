@@ -54,7 +54,8 @@ These are fundamentals pattern that should be familiar with in  order to take th
 * Dependency Injection: The whole framework is built around this concept. The goal is never to instantiate an
 object by hand, let see if we can achieve that. Right now
 uses *Inject* as the Container, maybe we need to
-jump to a custom one later on
+jump to a custom one later on.
+* CQRS
 
 ## Features
 
