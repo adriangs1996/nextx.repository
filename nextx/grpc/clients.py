@@ -17,15 +17,17 @@ class PublicationProjectGrpcAsyncClient(
 ):
     def __init__(self, url: str, blueprint_model: Type[BlueprintModel]) -> None:
         self.blueprint_model = blueprint_model
-        channel = Channel(url)
-        self.service = BlueprintServiceStub(channel)
+        self.url = url
 
     async def get_business_unit_active_project_async(
         self, business_unit: BusinessUnitModel
     ) -> Optional[BlueprintModel]:
+
+        channel = Channel(self.url)
+        service = BlueprintServiceStub(channel)
         request = BusinessUnitActiveBlueprintRequest(id=str(business_unit.id))
 
-        response = await self.service.GetActiveProjectForBU(request)
+        response = await service.GetActiveProjectForBU(request)
 
         if response.active_project is not None:
             return self.blueprint_model.from_orm(response.active_project)
@@ -35,9 +37,12 @@ class PublicationProjectGrpcAsyncClient(
     async def get_all_business_unit_projects_async(
         self, business_unit: BusinessUnitModel
     ) -> List[BlueprintModel]:
+
+        channel = Channel(self.url)
+        service = BlueprintServiceStub(channel)
         request = BusinessUnitBlueprintsRequest(id=str(business_unit.id))
 
-        response = await self.service.GetBusinessUnitActiveProjects(request)
+        response = await service.GetBusinessUnitActiveProjects(request)
 
         return list(
             self.blueprint_model.from_orm(blueprint) for blueprint in response.projects
