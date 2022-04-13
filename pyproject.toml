@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nextx"
-version = "0.12.0"
+version = "0.13.0"
 description = "Basic structure for fastapi microservices with specific support for blueprint project solution."
 authors = ["adriangs1996 <adriangonzalezsanchez1996@gmail.com>"]
 license = "MIT"
