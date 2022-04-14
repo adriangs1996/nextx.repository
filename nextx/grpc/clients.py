@@ -7,6 +7,7 @@ from nextx.grpc.protos.blueprint_pb2 import (
     BusinessUnitActiveBlueprintRequest,
     BusinessUnitBlueprintsRequest,
 )
+from google.protobuf.json_format import MessageToDict
 
 BusinessUnitModel = TypeVar("BusinessUnitModel", bound=Entity)
 BlueprintModel = TypeVar("BlueprintModel", bound=Entity)
@@ -23,30 +24,31 @@ class PublicationProjectGrpcAsyncClient(
         self, business_unit: BusinessUnitModel
     ) -> Optional[BlueprintModel]:
 
-        channel = Channel(self.url)
-        service = BlueprintServiceStub(channel)
-        request = BusinessUnitActiveBlueprintRequest(id=str(business_unit.id))
+        async with Channel(host=self.url) as channel:
+            service = BlueprintServiceStub(channel)
+            request = BusinessUnitActiveBlueprintRequest(id=str(business_unit.id))
 
-        response = await service.GetActiveProjectForBU(request)
+            response = await service.GetActiveProjectForBU(request)
 
-        if response.active_project is not None:
-            return self.blueprint_model.from_orm(response.active_project)
+            if response.active_project is not None:
+                return self.blueprint_model(**MessageToDict(response.active_project))
 
-        return None
+            return None
 
     async def get_all_business_unit_projects_async(
         self, business_unit: BusinessUnitModel
     ) -> List[BlueprintModel]:
 
-        channel = Channel(self.url)
-        service = BlueprintServiceStub(channel)
-        request = BusinessUnitBlueprintsRequest(id=str(business_unit.id))
+        async with Channel(host=self.url) as channel:
+            service = BlueprintServiceStub(channel)
+            request = BusinessUnitBlueprintsRequest(id=str(business_unit.id))
 
-        response = await service.GetBusinessUnitActiveProjects(request)
+            response = await service.GetBusinessUnitActiveProjects(request)
 
-        return list(
-            self.blueprint_model.from_orm(blueprint) for blueprint in response.projects
-        )
+            return list(
+                self.blueprint_model(**MessageToDict(blueprint))
+                for blueprint in response.projects
+            )
 
     def get_all_business_unit_projects(self, business_unit):
         raise NotImplementedError

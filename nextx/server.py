@@ -1,11 +1,16 @@
 import asyncio
-from typing import Callable, List, Optional
 import logging
-import uvicorn
+from asyncio import Task
+from typing import Callable, List, Optional
+
+import grpclib.server
 import inject
-from nextx.controllers import ApiController
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from grpclib.utils import graceful_exit
+
+from nextx.controllers import ApiController, __controllers__
 from nextx.dependency_injection import Factory
 from nextx.exceptions.definitions import (
     ForbiddenError,
@@ -15,15 +20,11 @@ from nextx.exceptions.definitions import (
 )
 from nextx.exceptions.handlers import (
     forbidden_exception_handler,
-    not_found_exception_handler,
     internal_server_exception_handler,
     invalid_request_exception_handler,
+    not_found_exception_handler,
 )
-from asyncio import Task
-import grpclib.server
-from grpclib.utils import graceful_exit
 from nextx.pubsub.isusbscriber import ISubscriber
-from nextx.controllers import __controllers__
 
 
 def _config_logger():
@@ -79,7 +80,7 @@ class Server:
         server = grpclib.server.Server([grpc_service])  # type: ignore
 
         with graceful_exit([server]):
-            await server.start()
+            await server.start(host="0.0.0.0", port=50051)
             logger = logging.getLogger("logger")
             logger.info(f"Serving gRPC on port 50051")
             await server.wait_closed()
@@ -133,7 +134,9 @@ class Server:
 
         try:
             grpc_service = inject.instance("grpc_service")
-        except inject.InjectorException:
+        except inject.InjectorException as e:
+            logger = logging.getLogger("logger")
+            logger.info("No gRPC server running")
             grpc_service = None
 
         if grpc_service is not None:
