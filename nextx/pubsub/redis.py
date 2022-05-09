@@ -1,7 +1,7 @@
 from typing import List, Union
 from nextx.pubsub.isusbscriber import ISubscriber
 import aioredis as redis
-from decouple import config
+from nextx.settings import settings
 import async_timeout
 import asyncio
 import logging
@@ -14,7 +14,7 @@ logger = logging.getLogger("logger")
 
 class RedisSubscriber(ISubscriber, abc.ABC):
     def __init__(self):
-        self.client = redis.Redis(host=config("REDIS_HOST"), decode_responses=True)
+        self.client = redis.Redis(host=settings.redis_host, decode_responses=True)
         self.pub_sub = self.client.pubsub()
 
     async def init_subscriber(self, events: List[str]):

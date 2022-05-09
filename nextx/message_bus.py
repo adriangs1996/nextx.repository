@@ -6,7 +6,7 @@ import inject
 from fastapi import BackgroundTasks
 from nextx.domain.events import Event
 from nextx.domain.commands import Command
-from decouple import config
+from nextx.settings import settings
 import aioredis as redis
 
 Message = Union[Event, Command]
@@ -47,7 +47,7 @@ class RedisMessageBus:
     # =======================================    EVENT  HANDLING   ================================ #
 
     async def _send_event_to_outside(self, channel: str, event: Event):
-        host: Any = config("REDIS_HOST")
+        host: str = settings.redis_host
         assert isinstance(host, str)
         client: redis.Redis = await redis.from_url(f"redis://{host}")
         await client.publish(channel, event.json())
