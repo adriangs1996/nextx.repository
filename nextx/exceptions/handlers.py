@@ -43,6 +43,8 @@ async def internal_server_exception_handler(request: Request, exc: InternalServe
 async def invalid_request_exception_handler(request: Request, exc: InvalidRequestError):
     data = DataResponse(
         message=f"Bad Request",
-        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        status_code=status.HTTP_400_BAD_REQUEST,
         data=exc.details,
     )
+
+    return JSONResponse(status_code=status.HTTP_200_OK, content=data.dict())
